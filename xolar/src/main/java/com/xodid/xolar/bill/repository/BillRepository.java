@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
+    // 특정 SolarPanel과 연관된 Bill 엔티티 리스트 반환
     List<Bill> findAllBySolarPanel(SolarPanel solarPanel);
 }

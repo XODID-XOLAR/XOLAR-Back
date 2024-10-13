@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SolarPanelController {
     private final SolarPanelService solarPanelService;
 
+    // 태양광 패널 상세 조회
     @GetMapping("{panel_id}")
     public ResponseEntity<SolarPanelResponseDto> getSolarPanel(@PathVariable Long panel_id){
         return ResponseEntity.status(HttpStatus.OK).body(solarPanelService.findSolarPanelById(panel_id));

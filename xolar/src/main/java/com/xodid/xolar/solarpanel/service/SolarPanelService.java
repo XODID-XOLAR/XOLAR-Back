@@ -23,6 +23,7 @@ public class SolarPanelService {
     private final ElectronicRepository electronicRepository;
     private final BillRepository billRepository;
 
+    // panelId로 태양광 패널 상세 조회
     public SolarPanelResponseDto findSolarPanelById(Long panelId) {
         SolarPanel solarPanel = findById(panelId);
         Electronic electronic = findElectronicBySolarPanel(solarPanel);

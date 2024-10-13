@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ElectronicRepository extends JpaRepository<Electronic, Long> {
+    // 특정 SolarPanel과 연관된 Electronic 엔티티 리스트 반환
     List<Electronic> findAllBySolarPanel(SolarPanel solarPanel);
 }

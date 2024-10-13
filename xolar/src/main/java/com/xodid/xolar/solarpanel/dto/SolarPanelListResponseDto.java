@@ -1,6 +1,5 @@
 package com.xodid.xolar.solarpanel.dto;
 
-import com.xodid.xolar.electronic.domain.Electronic;
 import com.xodid.xolar.solarpanel.domain.OperationStatus;
 import com.xodid.xolar.solarpanel.domain.SolarPanel;
 import lombok.AllArgsConstructor;
@@ -14,11 +13,11 @@ public class SolarPanelListResponseDto {
     private Integer elecGeneration;
     private OperationStatus operationStatus;
 
-    public static SolarPanelListResponseDto from(SolarPanel solarPanel, Electronic electronic){
+    public static SolarPanelListResponseDto from(SolarPanel solarPanel, Integer todayElecGeneration){
         return new SolarPanelListResponseDto(
                 solarPanel.getPanelId(),
                 solarPanel.getArea(),
-                electronic.getElecGeneration(),
+                todayElecGeneration,
                 solarPanel.getOperationStatus()
         );
     }

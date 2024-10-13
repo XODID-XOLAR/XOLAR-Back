@@ -1,7 +1,5 @@
 package com.xodid.xolar.solarpanel.dto;
 
-import com.xodid.xolar.bill.domain.Bill;
-import com.xodid.xolar.electronic.domain.Electronic;
 import com.xodid.xolar.solarpanel.domain.OperationStatus;
 import com.xodid.xolar.solarpanel.domain.SolarPanel;
 import lombok.AccessLevel;
@@ -22,16 +20,16 @@ public class SolarPanelResponseDto {
     private Integer billGeneration;
     private Integer billConsumption;
 
-    public static SolarPanelResponseDto from(SolarPanel solarPanel, Electronic electronic, Bill bill) {
+    public static SolarPanelResponseDto from(SolarPanel solarPanel, int elecGeneration, int elecConsumption, int billGeneration, int billConsumption) {
         return new SolarPanelResponseDto(
                 solarPanel.getPanelId(),
                 solarPanel.getArea(),
                 solarPanel.getImageNumber(),
                 solarPanel.getOperationStatus(),
-                electronic.getElecGeneration(),
-                electronic.getElecConsumption(),
-                bill.getBillGeneration(),
-                bill.getBillConsumption()
+                elecGeneration,
+                elecConsumption,
+                billGeneration,
+                billConsumption
         );
 
     }

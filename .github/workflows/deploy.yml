@@ -51,8 +51,8 @@ jobs:
       # build    
       - name: Build with Gradle
         run: |
-          chmod +x ./gradlew
-          ./gradlew build -x test
+          chmod +x ./xolar/gradlew
+          ./xolar/gradlew build -x test
       
       # GitHub Secrets에 추가한 액세스 키 값으로 AWS 사용자 인증    
       - name: Configure AWS credentials

@@ -70,7 +70,7 @@ jobs:
             --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
             --ignore-hidden-files \
             --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
-            --source .
+            --source ./xolar
       
       # S3에 업로드된 애플리케이션 배포      
       - name: Deploy to AWS EC2 from S3

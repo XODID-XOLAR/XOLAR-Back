@@ -43,8 +43,8 @@ jobs:
       # GitHub Secrets에 추가한 APPLICATION_YML로 application.yml 생성
       - name: make application.yml
         run: |
-          mkdir ./src/main/resources
-          cd ./src/main/resources
+          mkdir ./xolar/src/main/resources
+          cd ./xolar/src/main/resources
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
       

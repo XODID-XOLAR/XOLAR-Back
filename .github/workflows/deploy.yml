@@ -39,8 +39,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-	
- 	# GitHub Secrets에 추가한 APPLICATION_YML로 application.yml 생성
+
+      # GitHub Secrets에 추가한 APPLICATION_YML로 application.yml 생성
       - name: make application.yml
         run: |
           mkdir ./src/main/resources

@@ -15,6 +15,7 @@ import com.xodid.xolar.solarpanel.repository.SolarPanelRepository;
 import com.xodid.xolar.user.domain.User;
 import com.xodid.xolar.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SolarPanelService {
+    @Value("${aws.certificateArn}")
+    private String certificateArn;
+
     private final SolarPanelRepository solarPanelRepository;
     private final ElectronicService electronicService;
     private final BillService billService;
@@ -137,6 +141,13 @@ public class SolarPanelService {
             // 사물이 존재하지 않는 경우, 사물 생성
             CreateThingResult response = awsConfig.getIotClient()
                     .createThing(new CreateThingRequest().withThingName(thingName));
+
+            // 사물에 인증서 연결
+            AttachThingPrincipalRequest attachThingPrincipalRequest = new AttachThingPrincipalRequest()
+                    .withPrincipal(certificateArn)
+                            .withThingName(thingName);
+            awsConfig.getIotClient().attachThingPrincipal(attachThingPrincipalRequest);
+
             System.out.print("사물이 성공적으로 생성되었습니다.");
             return "사물이 성공적으로 생성되었습니다.";
         }

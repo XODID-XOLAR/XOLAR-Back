@@ -32,7 +32,9 @@ public class SolarPanelService {
     private final UserService userService;
     private final AwsConfig awsConfig;
 
-    // panelId로 태양광 패널 상세 조회
+    /**
+     * panelId로 태양광 패널을 상세 조회하는 메서드
+     */
     public SolarPanelResponseDto findSolarPanelById(Long panelId) {
         SolarPanel solarPanel = findById(panelId);
         List<Electronic> elecList = electronicService.findAllBySolarPanel(solarPanel);
@@ -53,7 +55,9 @@ public class SolarPanelService {
         return SolarPanelResponseDto.from(solarPanel, elecGenerationSum, elecConsumption, billGenerationSum, billConsumption);
     }
 
-    // 태양광 패널 목록 조회
+    /**
+     * 태양광 패널 목록을 조회하는 메서드
+     */
     public List<SolarPanelListResponseDto> findAllSolarPanels(){
         User user = userService.findById(1L);
         List<SolarPanel> solarPanels = findAllSolarPanels(user);
@@ -69,7 +73,9 @@ public class SolarPanelService {
         }).collect(Collectors.toList());
     }
 
-    // 각 패널에 대한 월별 전력 생산량 총합
+    /**
+     * 각 패널에 대한 월별 전력 생산량의 총합 계산
+     */
     public Integer elecGenerationSum(List<Electronic> elecList, int year, int month){
         return elecList.stream()
                 .filter(electronic -> electronic.getDateTime().getYear() == year &&
@@ -78,7 +84,9 @@ public class SolarPanelService {
                 .sum();
     }
 
-    // 각 패널에 대한 월별 전력 소비량 총합
+    /**
+     * 각 패널에 대한 월별 전력 소비량의 총합 계산
+     */
     public Integer elecConsumption(List<Electronic> elecList, int year, int month){
         return elecList.stream()
                 .filter(electronic -> electronic.getDateTime().getYear() == year &&
@@ -87,7 +95,9 @@ public class SolarPanelService {
                 .sum();
     }
 
-    // 각 패널에 대한 월별 예상 수입 총합
+    /**
+     * 각 패널에 대한 월별 예상 수입 총합 계산
+     */
     public Integer billGenerationSum(List<Bill> billList, int year, int month){
         return billList.stream()
                 .filter(bill -> bill.getDateTime().getYear() == year &&
@@ -96,7 +106,9 @@ public class SolarPanelService {
                 .sum();
     }
 
-    // 각 패널에 대한 월별 예상 전기요금 총합
+    /**
+     * 각 패널에 대한 월별 예상 전기요금 총합 계산
+     */
     public Integer billConsumption(List<Bill> billList, int year, int month){
         return billList.stream()
                 .filter(bill -> bill.getDateTime().getYear() == year &&
@@ -105,7 +117,9 @@ public class SolarPanelService {
                 .sum();
     }
 
-    // 각 패널에 대한 오늘 전력 생산량
+    /**
+     * 각 패널에 대한 오늘 전력 생산량 계산
+     */
     public Integer todayElecGeneration(List<Electronic> elecList, LocalDate today){
         return elecList.stream()
                 .filter(e -> e.getDateTime().toLocalDate().isEqual(today))
@@ -175,4 +189,6 @@ public class SolarPanelService {
     List<SolarPanel> findAllSolarPanels(User user){
         return solarPanelRepository.findAllByUser(user);
     }
+
+
 }

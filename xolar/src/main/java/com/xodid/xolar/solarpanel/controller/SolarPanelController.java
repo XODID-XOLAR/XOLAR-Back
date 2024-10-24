@@ -6,10 +6,7 @@ import com.xodid.xolar.solarpanel.service.SolarPanelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +26,11 @@ public class SolarPanelController {
     @GetMapping
     public ResponseEntity<List<SolarPanelListResponseDto>> getAllSolarPanels(){
         return ResponseEntity.status(HttpStatus.OK).body(solarPanelService.findAllSolarPanels());
+    }
+
+    // 태양광 패널 등록 <- 수정 필요 dto로 이름 받아오기
+    @PostMapping("/register/{thingName}")
+    public ResponseEntity<String> createThing(@PathVariable String thingName){
+        return ResponseEntity.status(HttpStatus.OK).body(solarPanelService.createThingAutomatically(thingName));
     }
 }

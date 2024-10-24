@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -24,6 +25,7 @@ public class SolarPanel {
     @Column(name = "panel_number", nullable = false)
     private String panelNumber;
 
+    @Setter
     @Column(name = "image_number", nullable = false)
     @ColumnDefault("3")
     private Integer imageNumber;

@@ -18,7 +18,12 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // cors 설정
+    /**
+     * CORS 설정을 위한 Bean 등록
+     * 프론트엔드가 위치한 도메인과 CORS 통신을 허용하기 위해 설정함
+     *
+     * @return CORS 설정이 적용된 CorsConfigurationSource 객체
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -33,6 +38,14 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * SecurityFilterChain 설정을 위한 Bean 등록
+     * HTTP 요청에 대한 보안 구성을 정의
+     *
+     * @param http HttpSecurity 설정 객체
+     * @return 설정이 완료된 SecurityFilterChain 객체
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);

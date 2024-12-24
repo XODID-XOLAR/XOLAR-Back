@@ -10,6 +10,7 @@ import com.xodid.xolar.global.exception.CustomException;
 import com.xodid.xolar.global.exception.ErrorCode;
 import com.xodid.xolar.solarpanel.domain.SolarPanel;
 import com.xodid.xolar.solarpanel.dto.SolarPanelListResponseDto;
+import com.xodid.xolar.solarpanel.dto.SolarPanelRequestDto;
 import com.xodid.xolar.solarpanel.dto.SolarPanelResponseDto;
 import com.xodid.xolar.solarpanel.repository.SolarPanelRepository;
 import com.xodid.xolar.user.domain.User;
@@ -132,6 +133,18 @@ public class SolarPanelService {
                 .orElse(0);
     }
 
+    public String createSolarPanel(SolarPanelRequestDto requestDto){
+        // 해당 코드의 태양광패널이 DB에 이미 존재하는지 확인
+        if(!isPanelCodeExist(requestDto.getPanelCode())){
+            // 태양광 패널이 존재하지 않는 경우, 새로운 태양광패널 DB에 저장 및 AWS IoT 사물에 등록
+            User user = userService.findById(1L);
+            SolarPanel solarPanel = requestDto.toEntity(user);
+            SolarPanel createdPanel = solarPanelRepository.save(solarPanel);
+            return createThingAutomatically(requestDto.getPanelCode());
+        }
+        return "해당 코드의 태양광패널이 이미 존재합니다.";
+    }
+
     /**
      * 자동으로 AWS IoT에 사물을 등록하는 메서드
      */
@@ -199,6 +212,12 @@ public class SolarPanelService {
     @Transactional(readOnly = true)
     List<SolarPanel> findAllSolarPanels(User user){
         return solarPanelRepository.findAllByUser(user);
+    }
+
+    // 해당 panel-code의 태양광 패널이 존재하는지 확인
+    @Transactional(readOnly = true)
+    public boolean isPanelCodeExist(String panelCode) {
+        return solarPanelRepository.existsByPanelCode(panelCode);
     }
 
 

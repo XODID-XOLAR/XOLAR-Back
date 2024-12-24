@@ -8,6 +8,7 @@ import com.xodid.xolar.electronic.service.ElectronicService;
 import com.xodid.xolar.global.config.AwsConfig;
 import com.xodid.xolar.global.exception.CustomException;
 import com.xodid.xolar.global.exception.ErrorCode;
+import com.xodid.xolar.global.utils.SecurityUtils;
 import com.xodid.xolar.solarpanel.domain.SolarPanel;
 import com.xodid.xolar.solarpanel.dto.SolarPanelListResponseDto;
 import com.xodid.xolar.solarpanel.dto.SolarPanelRequestDto;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Security;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,7 +66,7 @@ public class SolarPanelService {
      * 태양광 패널 목록을 조회하는 메서드
      */
     public List<SolarPanelListResponseDto> findAllSolarPanels(){
-        User user = userService.findById(1L);
+        User user = userService.findByEmail(SecurityUtils.getCurrentUserEmail());
         List<SolarPanel> solarPanels = findAllSolarPanels(user);
 
         // 오늘 날짜 가져오기
@@ -133,11 +135,14 @@ public class SolarPanelService {
                 .orElse(0);
     }
 
+    /**
+     * DB에 태양광패널 등록 메서드
+     */
     public String createSolarPanel(SolarPanelRequestDto requestDto){
-        // 해당 코드의 태양광패널이 DB에 이미 존재하는지 확인
-        if(!isPanelCodeExist(requestDto.getPanelCode())){
+        // 해당 코드의 태양광패널이 DB에 존재하지 않고 AWS IoT에도 존재하지 않는지 확인
+        if(!isPanelCodeExist(requestDto.getPanelCode()) && !describeThing(requestDto.getPanelCode())){
             // 태양광 패널이 존재하지 않는 경우, 새로운 태양광패널 DB에 저장 및 AWS IoT 사물에 등록
-            User user = userService.findById(1L);
+            User user = userService.findByEmail(SecurityUtils.getCurrentUserEmail());
             SolarPanel solarPanel = requestDto.toEntity(user);
             SolarPanel createdPanel = solarPanelRepository.save(solarPanel);
             return createThingAutomatically(requestDto.getPanelCode());
@@ -149,23 +154,17 @@ public class SolarPanelService {
      * 자동으로 AWS IoT에 사물을 등록하는 메서드
      */
     public String createThingAutomatically(String thingName) {
-        // 해당 이름의 사물이 이미 존재하는지 확인
-        if(!describeThing(thingName)){
-            // 사물이 존재하지 않는 경우, 사물 생성
-            CreateThingResult response = awsConfig.getIotClient()
-                    .createThing(new CreateThingRequest().withThingName(thingName));
+        // 사물이 존재하지 않는 경우, 사물 생성
+        CreateThingResult response = awsConfig.getIotClient()
+                .createThing(new CreateThingRequest().withThingName(thingName));
 
-            // 사물에 인증서 연결
-            AttachThingPrincipalRequest attachThingPrincipalRequest = new AttachThingPrincipalRequest()
-                    .withPrincipal(certificateArn)
-                            .withThingName(thingName);
-            awsConfig.getIotClient().attachThingPrincipal(attachThingPrincipalRequest);
+        // 사물에 인증서 연결
+        AttachThingPrincipalRequest attachThingPrincipalRequest = new AttachThingPrincipalRequest()
+                .withPrincipal(certificateArn)
+                .withThingName(thingName);
+        awsConfig.getIotClient().attachThingPrincipal(attachThingPrincipalRequest);
 
-            System.out.print("사물이 성공적으로 생성되었습니다.");
-            return "사물이 성공적으로 생성되었습니다.";
-        }
-        // 사물이 이미 존재하는 경우, 아래 메세지 반환
-        return "해당 이름의 사물이 이미 존재합니다.";
+        return "사물이 성공적으로 생성되었습니다.";
     }
 
     /**

@@ -1,15 +1,13 @@
 package com.xodid.xolar.solarpanel.controller;
 
 import com.xodid.xolar.solarpanel.dto.SolarPanelListResponseDto;
+import com.xodid.xolar.solarpanel.dto.SolarPanelRequestDto;
 import com.xodid.xolar.solarpanel.dto.SolarPanelResponseDto;
 import com.xodid.xolar.solarpanel.service.SolarPanelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +27,11 @@ public class SolarPanelController {
     @GetMapping
     public ResponseEntity<List<SolarPanelListResponseDto>> getAllSolarPanels(){
         return ResponseEntity.status(HttpStatus.OK).body(solarPanelService.findAllSolarPanels());
+    }
+
+    // 태양광 패널 등록
+    @PostMapping("/register")
+    public ResponseEntity<String> createThing(@RequestBody SolarPanelRequestDto requestDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(solarPanelService.createSolarPanel(requestDto));
     }
 }

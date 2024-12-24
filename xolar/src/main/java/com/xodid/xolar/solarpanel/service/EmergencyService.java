@@ -20,7 +20,7 @@ public class EmergencyService {
     public String publishToShadow(Long panelId, EmergencyStatus emergencyStatus) throws IOException {
         // 패널 Id를 이용해 해당 패널의 정보 조회 -> 패널의 고유 번호 가져오기
         SolarPanel panel = solarPanelService.findById(panelId);
-        String panelNumber = panel.getPanelNumber();
+        String panelNumber = panel.getPanelCode();
 
         // MQTTConfig를 이용해 패널 고유 번호와 비상 상태를 Device Shadow에 게시
         mqttConfig.publishToShadow(panelNumber, emergencyStatus);

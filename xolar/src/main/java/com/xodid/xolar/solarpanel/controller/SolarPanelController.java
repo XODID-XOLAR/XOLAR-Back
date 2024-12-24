@@ -1,6 +1,7 @@
 package com.xodid.xolar.solarpanel.controller;
 
 import com.xodid.xolar.solarpanel.dto.SolarPanelListResponseDto;
+import com.xodid.xolar.solarpanel.dto.SolarPanelRequestDto;
 import com.xodid.xolar.solarpanel.dto.SolarPanelResponseDto;
 import com.xodid.xolar.solarpanel.service.SolarPanelService;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,9 @@ public class SolarPanelController {
         return ResponseEntity.status(HttpStatus.OK).body(solarPanelService.findAllSolarPanels());
     }
 
-    // 태양광 패널 등록 <- 수정 필요 dto로 이름 받아오기
-    @PostMapping("/register/{thingName}")
-    public ResponseEntity<String> createThing(@PathVariable String thingName){
-        return ResponseEntity.status(HttpStatus.OK).body(solarPanelService.createThingAutomatically(thingName));
+    // 태양광 패널 등록
+    @PostMapping("/register")
+    public ResponseEntity<String> createThing(@RequestBody SolarPanelRequestDto requestDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(solarPanelService.createSolarPanel(requestDto));
     }
 }

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface SolarPanelRepository extends JpaRepository<SolarPanel, Long> {
     List<SolarPanel> findAllByUser(User user);
+    Boolean existsByPanelCode(String panelCode);
 }

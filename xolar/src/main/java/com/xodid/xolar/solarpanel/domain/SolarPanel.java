@@ -2,10 +2,7 @@ package com.xodid.xolar.solarpanel.domain;
 
 import com.xodid.xolar.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -22,8 +19,8 @@ public class SolarPanel {
     @Column(nullable = false)
     private String area;
 
-    @Column(name = "panel_number", nullable = false)
-    private String panelNumber;
+    @Column(name = "panel_code", nullable = false)
+    private String panelCode;
 
     @Setter
     @Column(name = "image_number", nullable = false)
@@ -43,4 +40,11 @@ public class SolarPanel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", updatable = false)
     private User user;
+
+    @Builder
+    public SolarPanel(User user, String area, String panelCode){
+        this.user = user;
+        this.area = area;
+        this.panelCode = panelCode;
+    }
 }

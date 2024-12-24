@@ -56,6 +56,14 @@ public class UserService {
                 ()-> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
+    // email로 User 조회
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                ()-> new CustomException(ErrorCode.USER_NOT_EXIST)
+        );
+    }
+
     // Email로 사용자 객체 가져오기
     @Transactional(readOnly = true)
     public User getUserByEmail(String email){

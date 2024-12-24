@@ -33,7 +33,7 @@ public class TokenProvider {
     private String issuer;
 
     // 토큰 만료시간 설정
-    private static Long accessTokenExpiration = 1000*30L; // 1시간 = 1000(ms->s) * 60(s->m) * 60(m->h)
+    private static Long accessTokenExpiration = 1000*60*60L; // 1시간 = 1000(ms->s) * 60(s->m) * 60(m->h)
     private static Long refreshTokenExpiration = 1000*60*60*25*14L; // 2주 = 1000(ms->s) * 60(s->m) * 60(m->h) * 24(h->하루) * 14(2주)
 
     // 토큰에 포함할 기본 정보와 클레임 키값 설정

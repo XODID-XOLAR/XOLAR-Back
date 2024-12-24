@@ -49,13 +49,6 @@ public class UserService {
 
     /* Transaction 함수들 */
 
-    // id로 User 조회
-    @Transactional(readOnly = true)
-    public User findById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                ()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-    }
-
     // email로 User 조회
     @Transactional(readOnly = true)
     public User findByEmail(String email) {

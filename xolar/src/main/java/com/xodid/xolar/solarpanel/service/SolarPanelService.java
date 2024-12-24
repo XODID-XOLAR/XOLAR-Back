@@ -135,9 +135,12 @@ public class SolarPanelService {
                 .orElse(0);
     }
 
+    /**
+     * DB에 태양광패널 등록 메서드
+     */
     public String createSolarPanel(SolarPanelRequestDto requestDto){
-        // 해당 코드의 태양광패널이 DB에 이미 존재하는지 확인
-        if(!isPanelCodeExist(requestDto.getPanelCode())){
+        // 해당 코드의 태양광패널이 DB에 존재하지 않고 AWS IoT에도 존재하지 않는지 확인
+        if(!isPanelCodeExist(requestDto.getPanelCode()) && !describeThing(requestDto.getPanelCode())){
             // 태양광 패널이 존재하지 않는 경우, 새로운 태양광패널 DB에 저장 및 AWS IoT 사물에 등록
             User user = userService.findByEmail(SecurityUtils.getCurrentUserEmail());
             SolarPanel solarPanel = requestDto.toEntity(user);
@@ -151,23 +154,17 @@ public class SolarPanelService {
      * 자동으로 AWS IoT에 사물을 등록하는 메서드
      */
     public String createThingAutomatically(String thingName) {
-        // 해당 이름의 사물이 이미 존재하는지 확인
-        if(!describeThing(thingName)){
-            // 사물이 존재하지 않는 경우, 사물 생성
-            CreateThingResult response = awsConfig.getIotClient()
-                    .createThing(new CreateThingRequest().withThingName(thingName));
+        // 사물이 존재하지 않는 경우, 사물 생성
+        CreateThingResult response = awsConfig.getIotClient()
+                .createThing(new CreateThingRequest().withThingName(thingName));
 
-            // 사물에 인증서 연결
-            AttachThingPrincipalRequest attachThingPrincipalRequest = new AttachThingPrincipalRequest()
-                    .withPrincipal(certificateArn)
-                            .withThingName(thingName);
-            awsConfig.getIotClient().attachThingPrincipal(attachThingPrincipalRequest);
+        // 사물에 인증서 연결
+        AttachThingPrincipalRequest attachThingPrincipalRequest = new AttachThingPrincipalRequest()
+                .withPrincipal(certificateArn)
+                .withThingName(thingName);
+        awsConfig.getIotClient().attachThingPrincipal(attachThingPrincipalRequest);
 
-            System.out.print("사물이 성공적으로 생성되었습니다.");
-            return "사물이 성공적으로 생성되었습니다.";
-        }
-        // 사물이 이미 존재하는 경우, 아래 메세지 반환
-        return "해당 이름의 사물이 이미 존재합니다.";
+        return "사물이 성공적으로 생성되었습니다.";
     }
 
     /**
